@@ -5,16 +5,21 @@ import java.util.Optional;
 public class LinkedList<T> {
 
     private Node<T> head;
+    private Node<T> tail;
 
     private int nodeCount;
 
     public static class Node<T> {
         private Node<T> next;
+        private Node<T> prev;
         public T value;
     }
 
     public LinkedList() {
         head = new Node<>();
+        tail = new Node<>();
+        head.next = tail;
+        tail.prev = head;
     }
 
     public LinkedList(T... nodeValues) {
@@ -23,22 +28,26 @@ public class LinkedList<T> {
         Node<T> firstNode = new Node<>();
         firstNode.value = nodeValues[0];
         head.next = firstNode;
+        firstNode.prev = head;
 
         Node<T> lastInsertedNode = firstNode;
         for (int i = 1; i < nodeValues.length; i++) {
             Node<T> newNode = new Node<>();
             newNode.value = nodeValues[i];
             lastInsertedNode.next = newNode;
+            newNode.prev = lastInsertedNode;
             lastInsertedNode = newNode;
         }
+
+        lastInsertedNode.next = tail;
+        tail.prev = lastInsertedNode;
 
         nodeCount += nodeValues.length;
     }
 
     public Optional<Node<T>> getFirst() {
         if (nodeCount > 0) {
-            Node<T> firstNode = head.next;
-            return Optional.of(firstNode);
+            return Optional.of(head.next);
         }
 
         return Optional.empty();
@@ -46,11 +55,23 @@ public class LinkedList<T> {
 
     public Optional<Node<T>> get(int index) {
         if (index < nodeCount) {
-            int currentIndex = 0;
-            Node<T> node = head.next;
-            while (currentIndex != index) {
-                node = node.next;
-                currentIndex ++;
+            Node<T> node;
+            int currentIndex;
+
+            if (index <= (nodeCount / 2)) {
+                currentIndex = 0;
+                node = head.next;
+                while (currentIndex != index) {
+                    node = node.next;
+                    currentIndex ++;
+                }
+            } else {
+                currentIndex = nodeCount - 1;
+                node = tail.prev;
+                while (currentIndex != index) {
+                    node = node.prev;
+                    currentIndex --;
+                }
             }
 
             return Optional.of(node);
@@ -61,64 +82,75 @@ public class LinkedList<T> {
 
     public Optional<Node<T>> getLast() {
         if (nodeCount > 0) {
-            Node<T> lastNode = head;
-            while (lastNode.next != null) {
-                lastNode = lastNode.next;
-            }
-
-            return Optional.of(lastNode);
+            return Optional.of(tail.prev);
         }
 
         return Optional.empty();
     }
 
     public void insertFirst(T nodeValue) {
-        Node<T> fistNode = new Node<>();
-        fistNode.value = nodeValue;
-        fistNode.next = head.next;
-        head.next = fistNode;
+        Node<T> firstNode = new Node<>();
+        firstNode.value = nodeValue;
+        firstNode.next = head.next;
+        firstNode.prev = head;
+        head.next.prev = firstNode;
+        head.next = firstNode;
         nodeCount ++;
     }
 
-    public boolean insert(T prevNodeValue, T nodeValue) {
-        Node<T> prevNode = head;
-        boolean found = false;
-        while (prevNode.next != null) {
-            prevNode = prevNode.next;
-            if(prevNode.value == prevNodeValue) {
-                found = true;
-                break;
+    public boolean insert(int index, T nodeValue) {
+        if (index < nodeCount) {
+            Node<T> newNode = new Node<T>();
+            newNode.value = nodeValue;
+            int currntIndex;
+            Node node;
+
+            if(index <= (nodeCount / 2)) {
+                currntIndex = 0;
+                node = head.next;
+                while (currntIndex != index) {
+                    node = node.next;
+                    currntIndex ++;
+                }
+            } else {
+                currntIndex = nodeCount - 1;
+                node = tail.prev;
+                while (currntIndex != index) {
+                    node = node.prev;
+                    currntIndex --;
+                }
             }
+
+            newNode.next = node;
+            newNode.prev = node.prev;
+            node.prev.next = newNode;
+            node.prev = newNode;
+
+            nodeCount ++;
+            return true;
+        } else if (index == nodeCount) {
+            insertLast(nodeValue);
+            return true;
         }
 
-        if (!found) {
-            return false;
-        }
-
-        Node<T> newNode = new Node<>();
-        newNode.value = nodeValue;
-        newNode.next = prevNode.next;
-        prevNode.next = newNode;
-        nodeCount ++;
-        return true;
+        return false;
     }
 
     public void insertLast(T nodeValue) {
-        Node<T> lastNode = head;
-        while (lastNode.next != null) {
-            lastNode = lastNode.next;
-        }
-
-        Node<T> newNode = new Node<>();
-        newNode.value = nodeValue;
-        lastNode.next = newNode;
+        Node<T> lastNode = new Node<T>();
+        lastNode.value = nodeValue;
+        lastNode.next = tail;
+        lastNode.prev = tail.prev;
+        tail.prev.next = lastNode;
+        tail.prev = lastNode;
         nodeCount ++;
     }
 
     public Optional<Node<T>> deleteFirst () {
         if (nodeCount > 0) {
             Node<T> nodeToDelete = head.next;
-            head.next = nodeToDelete.next;
+            nodeToDelete.prev.next = nodeToDelete.next;
+            nodeToDelete.next.prev = head;
             nodeCount --;
             return Optional.of(nodeToDelete);
         }
@@ -126,32 +158,42 @@ public class LinkedList<T> {
         return Optional.empty();
     }
 
-    public boolean delete (T nodeValue) {
-        Node<T> nodeToDelete = head;
-        Node<T> prevNode = null;
-        while (nodeToDelete.next != null) {
-            prevNode = nodeToDelete;
-            nodeToDelete = nodeToDelete.next;
-            if(nodeToDelete.value == nodeValue) {
-                prevNode.next = nodeToDelete.next;
-                nodeCount --;
-                return true;
+    public Optional<Node<T>> delete (int index) {
+        if (index < nodeCount) {
+            int currentIndex;
+            Node<T> nodeToDelete;
+
+            if (index <= (nodeCount / 2)) {
+                currentIndex = 0;
+                nodeToDelete = head.next;
+                while (currentIndex != index) {
+                    nodeToDelete = nodeToDelete.next;
+                    currentIndex++;
+                }
+            } else {
+                currentIndex = nodeCount - 1;
+                nodeToDelete = tail.prev;
+                while (currentIndex != index) {
+                    nodeToDelete = nodeToDelete.prev;
+                    currentIndex--;
+                }
             }
+
+            nodeToDelete.prev.next = nodeToDelete.next;
+            nodeToDelete.next.prev = nodeToDelete.prev;
+            nodeCount--;
+
+            return Optional.of(nodeToDelete);
         }
 
-        return false;
+        return Optional.empty();
     }
 
     public Optional<Node<T>> deleteLast () {
-        Node<T> nodeToDelete = head;
-        Node<T> prevNode = null;
-        while (nodeToDelete.next != null) {
-            prevNode = nodeToDelete;
-            nodeToDelete = nodeToDelete.next;
-        }
-
-        if (nodeToDelete != head) {
-            prevNode.next = null;
+        if (nodeCount > 0) {
+            Node<T> nodeToDelete = tail.prev;
+            nodeToDelete.prev.next = tail;
+            nodeToDelete.next.prev = nodeToDelete.prev;
             nodeCount --;
             return Optional.of(nodeToDelete);
         }
@@ -204,7 +246,7 @@ public class LinkedList<T> {
         stringBuffer.append("{");
 
         Node<T> node = head;
-        while (node.next != null) {
+        while (node.next != tail) {
             node = node.next;
             stringBuffer.append(node.value).append(",");
         }

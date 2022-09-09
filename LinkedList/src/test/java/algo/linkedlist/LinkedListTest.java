@@ -66,9 +66,10 @@ public class LinkedListTest {
 
     @Test
     public void testDelete() {
-        boolean deleteResult = linkedList.delete(3);
-        assertThat(deleteResult, is(true));
-        assertThat(linkedList.toString(), is("{1,2,4,5,}"));
+        Optional<LinkedList.Node<Integer>> deleteResult = linkedList.delete(3);
+        assertThat(deleteResult.isPresent(), is(true));
+        assertThat(deleteResult.get().value, is(4));
+        assertThat(linkedList.toString(), is("{1,2,3,5,}"));
     }
 
     @Test
