@@ -14,17 +14,16 @@ public class Stack<T> {
     }
 
     public Stack(T... values) {
-        Arrays.sort(values, Collections.reverseOrder());
         linkedList = new LinkedList<>(values);
     }
 
     public void push(T value) {
-        linkedList.insertFirst(value);
+        linkedList.insertLast(value);
     }
 
     public Optional<T> pop() {
         if (!isEmpty()) {
-            Optional<LinkedList.Node<T>> deletionResult = linkedList.deleteFirst();
+            Optional<LinkedList.Node<T>> deletionResult = linkedList.deleteLast();
             if (deletionResult.isPresent()) {
                 return Optional.of(deletionResult.get().value);
             }
@@ -35,7 +34,7 @@ public class Stack<T> {
 
     public Optional<T> peek() {
         if (!isEmpty()) {
-            Optional<LinkedList.Node<T>> getResult = linkedList.getFirst();
+            Optional<LinkedList.Node<T>> getResult = linkedList.getLast();
             if (getResult.isPresent()) {
                 return Optional.of(getResult.get().value);
             }
