@@ -104,4 +104,9 @@ public class LinkedListTest {
         assertThat(countResult, is(6));
     }
 
+    @Test
+    public void testToString() {
+        String toStringResult = linkedList.toString();
+        assertThat(toStringResult, is("{1,2,3,4,5,}"));
+    }
 }

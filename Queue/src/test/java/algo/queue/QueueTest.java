@@ -52,4 +52,10 @@ public class QueueTest {
         int lengthResult = queue.length();
         assertThat(lengthResult, is(6));
     }
+
+    @Test
+    public void testToString() {
+        String toStringResult = queue.toString();
+        assertThat(toStringResult, is("{1,2,3,4,5,6,}"));
+    }
 }
