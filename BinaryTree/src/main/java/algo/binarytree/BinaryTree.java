@@ -1,5 +1,7 @@
 package algo.binarytree;
 
+import algo.linkedlist.LinkedList;
+
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -27,17 +29,19 @@ public class BinaryTree<T> {
         }
     }
 
-    public BinaryTree(List<T> inOrderTraversal, TraversalTypes otherTraversalType, List<T> otherTraversal) {
+    public BinaryTree(LinkedList<T> inOrderTraversal, TraversalTypes otherTraversalType, LinkedList<T> otherTraversal) {
         if (otherTraversalType == TraversalTypes.IN_ORDER) {
             throw new IllegalArgumentException("Can not pass both in-order traversal for BinaryTree creation");
-        } else if (inOrderTraversal.size() != otherTraversal.size()) {
-            throw new IllegalArgumentException("Length of both traversal are not same");
+        } else if (inOrderTraversal.length() != otherTraversal.length()) {
+            throw new IllegalArgumentException("Length of both traversal can not be same");
+        } else if (inOrderTraversal.length() == 0 && otherTraversal.length() == 0) {
+            throw new IllegalArgumentException("Length of both traversal can not be zero");
         }
 
         if (otherTraversalType == TraversalTypes.POST_ORDER)
-            root = generateTree((T[]) inOrderTraversal.toArray(), 0, inOrderTraversal.size(), otherTraversalType, (T[]) otherTraversal.toArray(), otherTraversal.size() - 1);
+            root = generateTree(inOrderTraversal.toArray().get(), 0, inOrderTraversal.length(), otherTraversalType, otherTraversal.toArray().get(), otherTraversal.length() - 1);
         else
-            root = generateTree((T[]) inOrderTraversal.toArray(), 0, inOrderTraversal.size(), otherTraversalType, (T[]) otherTraversal.toArray(), 0);
+            root = generateTree(inOrderTraversal.toArray().get(), 0, inOrderTraversal.length(), otherTraversalType, otherTraversal.toArray().get(), 0);
     }
 
     private Node<T> generateTree(T[] inOrderTraversal, int startIndex, int endIndex, TraversalTypes otherTraversalType, T[] otherTraversal, int index) {
