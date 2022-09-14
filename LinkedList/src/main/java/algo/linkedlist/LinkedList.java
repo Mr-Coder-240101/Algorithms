@@ -1,5 +1,6 @@
 package algo.linkedlist;
 
+import java.lang.reflect.Array;
 import java.util.Optional;
 
 public class LinkedList<T> {
@@ -238,6 +239,22 @@ public class LinkedList<T> {
 
     public int length() {
         return nodeCount;
+    }
+
+    public Optional<T[]> toArray() {
+        if (nodeCount > 0) {
+            Node<T> node = head.next;
+            T[] array = (T[])  Array.newInstance(node.value.getClass(), nodeCount);
+
+            for (int i = 0; i < array.length; i++) {
+                array[i] = node.value;
+                node = node.next;
+            }
+
+            return Optional.of(array);
+        }
+
+        return Optional.empty();
     }
 
     @Override

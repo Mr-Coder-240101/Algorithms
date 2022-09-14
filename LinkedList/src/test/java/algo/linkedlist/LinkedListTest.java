@@ -105,6 +105,13 @@ public class LinkedListTest {
     }
 
     @Test
+    public void testToArray() {
+        Optional<Integer[]> toArrayResult = linkedList.toArray();
+        assertThat(toArrayResult.isPresent(), is(true));
+        assertThat(toArrayResult.get(), is(new Integer[]{1, 2, 3, 4, 5}));
+    }
+
+    @Test
     public void testToString() {
         String toStringResult = linkedList.toString();
         assertThat(toStringResult, is("{1,2,3,4,5,}"));
