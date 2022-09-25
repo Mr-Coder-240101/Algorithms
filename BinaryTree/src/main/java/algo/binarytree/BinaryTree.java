@@ -1,13 +1,13 @@
 package algo.binarytree;
 
 import algo.linkedlist.LinkedList;
+import algo.queue.Queue;
 
-import java.util.List;
 import java.util.stream.IntStream;
 
 public class BinaryTree<T> {
 
-    private Node root;
+    private Node<T> root;
     private int nodeCount;
 
     public static class Node<T> {
@@ -21,11 +21,36 @@ public class BinaryTree<T> {
     }
 
     public BinaryTree(T... nodeValues) {
-        root = new Node();
+        root = new Node<>();
         root.value = nodeValues[0];
+        nodeCount ++;
 
-        for (T nodeValue: nodeValues) {
+        Queue<Node<T>> nodeQueue = new Queue<>(root);
 
+        for (int i = 1; i < nodeValues.length; i++) {
+            if(nodeQueue.isEmpty()) {
+                throw new IllegalArgumentException("Node values are not in proper order");
+            }
+
+            Node<T> peekNode;
+
+            if ((i & 1) != 1) {
+                peekNode = nodeQueue.dequeue().get();
+                if (nodeValues[i] == null)
+                    continue;
+                peekNode.right = new Node<>();
+                peekNode.right.value = nodeValues[i];
+                nodeCount ++;
+                nodeQueue.enqueue(peekNode.right);
+            } else {
+                if (nodeValues[i] == null)
+                    continue;
+                peekNode = nodeQueue.peek().get();
+                peekNode.left = new Node<>();
+                peekNode.left.value = nodeValues[i];
+                nodeCount ++;
+                nodeQueue.enqueue(peekNode.left);
+            }
         }
     }
 
