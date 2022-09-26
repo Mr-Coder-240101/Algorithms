@@ -36,13 +36,13 @@ public class BinaryTreeTest<T> {
     }
 
     @Test
-    public void testGetNodeCount() {
-        int getNodeCountResultPreOrder = binaryTreePreOrder.getNodeCount();
-        int getNodeCountResultPostOrder = binaryTreePostOrder.getNodeCount();
-        int getNodeCountResultVarArgs = binaryTreeUsingVarArgs.getNodeCount();
+    public void testNodeCount() {
+        int nodeCountResultPreOrder = binaryTreePreOrder.nodeCount();
+        int nodeCountResultPostOrder = binaryTreePostOrder.nodeCount();
+        int nodeCountResultVarArgs = binaryTreeUsingVarArgs.nodeCount();
 
-        assertThat(getNodeCountResultPreOrder, is(5));
-        assertThat(getNodeCountResultPostOrder, is(5));
-        assertThat(getNodeCountResultVarArgs, is(7));
+        assertThat(nodeCountResultPreOrder, is(5));
+        assertThat(nodeCountResultPostOrder, is(5));
+        assertThat(nodeCountResultVarArgs, is(7));
     }
 }

@@ -14,6 +14,12 @@ public class BinaryTree<T> {
         private Node<T> left;
         private Node<T> right;
         public T value;
+        
+        private String linearize() {
+            return String.format("%s[%s,%s]", value,
+                    left == null ? "null" : left.linearize(),
+                    right == null ? "null" : right.linearize());
+        }
     }
 
     public enum TraversalTypes {
@@ -96,28 +102,12 @@ public class BinaryTree<T> {
         return root;
     }
 
-    public int getNodeCount() {
+    public int nodeCount() {
         return nodeCount;
     }
 
     @Override
     public String toString(){
-        StringBuffer line = new StringBuffer();
-        linearize(line,root);
-        return line.toString();
-    }
-
-    private void linearize(StringBuffer line, Node<T> node){
-        if (node == null){
-            line.append("null");
-            return;
-        }
-
-        line.append(node.value);
-        line.append("[");
-        linearize(line, node.left);
-        line.append(",");
-        linearize(line, node.right);
-        line.append("]");
+        return root.linearize();
     }
 }
