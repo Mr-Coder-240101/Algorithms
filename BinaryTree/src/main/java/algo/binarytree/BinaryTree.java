@@ -14,7 +14,7 @@ public class BinaryTree<T> {
         private Node<T> left;
         private Node<T> right;
         public T value;
-        
+
         private String linearize() {
             return String.format("%s[%s,%s]", value,
                     left == null ? "null" : left.linearize(),
@@ -104,6 +104,39 @@ public class BinaryTree<T> {
 
     public int nodeCount() {
         return nodeCount;
+    }
+
+    public int leafCount() {
+        Queue<Node<T>> nodeQueue = new Queue<>();
+        int leafCount = 0;
+
+        if (root.left != null) {
+            nodeQueue.enqueue(root.left);
+        }
+        if (root.right != null) {
+            nodeQueue.enqueue(root.right);
+        }
+        if (nodeQueue.isEmpty()) {
+            leafCount ++;
+            return leafCount;
+        }
+
+        while (!nodeQueue.isEmpty()) {
+            Node<T> node = nodeQueue.dequeue().get();
+
+            if (node.left == null && node.right == null) {
+                leafCount ++;
+            } else {
+                if (node.left != null) {
+                    nodeQueue.enqueue(node.left);
+                }
+                if (node.right != null){
+                    nodeQueue.enqueue(node.right);
+                }
+            }
+        }
+
+        return leafCount;
     }
 
     @Override

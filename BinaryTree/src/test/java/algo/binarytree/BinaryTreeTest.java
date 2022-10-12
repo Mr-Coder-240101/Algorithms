@@ -25,14 +25,14 @@ public class BinaryTreeTest<T> {
     }
 
     @Test
-    public void testToString() {
-        String toStringResultPreOrder = binaryTreePreOrder.toString();
-        String toStringResultPostOrder = binaryTreePostOrder.toString();
-        String toStringResultVarArgs = binaryTreeUsingVarArgs.toString();
+    public void testLeafCount() {
+        int leafCountResultPreOrder = binaryTreePreOrder.leafCount();
+        int leafCountResultPostOrder = binaryTreePostOrder.leafCount();
+        int leafCountResultVarArgs = binaryTreeUsingVarArgs.leafCount();
 
-        assertThat(toStringResultPreOrder, is("20[15[5[null,null],18[null,null]],25[null,null]]"));
-        assertThat(toStringResultPostOrder, is("20[15[5[null,null],18[null,null]],25[null,null]]"));
-        assertThat(toStringResultVarArgs, is("1[2[3[5[null,null],null],4[6[null,null],7[null,null]]],null]"));
+        assertThat(leafCountResultPreOrder, is(3));
+        assertThat(leafCountResultPostOrder, is(3));
+        assertThat(leafCountResultVarArgs, is(3));
     }
 
     @Test
@@ -44,5 +44,16 @@ public class BinaryTreeTest<T> {
         assertThat(nodeCountResultPreOrder, is(5));
         assertThat(nodeCountResultPostOrder, is(5));
         assertThat(nodeCountResultVarArgs, is(7));
+    }
+
+    @Test
+    public void testToString() {
+        String toStringResultPreOrder = binaryTreePreOrder.toString();
+        String toStringResultPostOrder = binaryTreePostOrder.toString();
+        String toStringResultVarArgs = binaryTreeUsingVarArgs.toString();
+
+        assertThat(toStringResultPreOrder, is("20[15[5[null,null],18[null,null]],25[null,null]]"));
+        assertThat(toStringResultPostOrder, is("20[15[5[null,null],18[null,null]],25[null,null]]"));
+        assertThat(toStringResultVarArgs, is("1[2[3[5[null,null],null],4[6[null,null],7[null,null]]],null]"));
     }
 }
